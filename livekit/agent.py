@@ -15,7 +15,6 @@ from livekit.plugins import silero, openai, elevenlabs
 load_dotenv(dotenv_path=".env.local")
 logger = logging.getLogger("voice-agent")
 
-
 def prewarm(proc: JobProcess):
     proc.userdata["vad"] = silero.VAD.load()
 
