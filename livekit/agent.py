@@ -10,12 +10,10 @@ from livekit.agents import (
     llm,
 )
 from livekit.agents.pipeline import VoicePipelineAgent
-from livekit.plugins import openai, deepgram, silero
-
+from livekit.plugins import silero, openai, elevenlabs
 
 load_dotenv(dotenv_path=".env.local")
 logger = logging.getLogger("voice-agent")
-
 
 def prewarm(proc: JobProcess):
     proc.userdata["vad"] = silero.VAD.load()
@@ -38,15 +36,11 @@ async def entrypoint(ctx: JobContext):
     participant = await ctx.wait_for_participant()
     logger.info(f"starting voice assistant for participant {participant.identity}")
 
-    # This project is configured to use Deepgram STT, OpenAI LLM and TTS plugins
-    # Other great providers exist like Cartesia and ElevenLabs
-    # Learn more and pick the best one for your app:
-    # https://docs.livekit.io/agents/plugins
     agent = VoicePipelineAgent(
         vad=ctx.proc.userdata["vad"],
-        stt=deepgram.STT(),
-        llm=openai.LLM(model="gpt-4o-mini"),
-        tts=openai.TTS(),
+        stt=openai.STT.with_groq(model="whisper-large-v3"),
+        llm=openai.LLM.with_groq(model="llama-3.3-70b-versatile"),
+        tts=elevenlabs.TTS(),
         chat_ctx=initial_ctx,
     )
 
@@ -63,3 +57,4 @@ if __name__ == "__main__":
             prewarm_fnc=prewarm,
         ),
     )
+
