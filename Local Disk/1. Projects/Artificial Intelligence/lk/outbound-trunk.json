@@ -1,0 +1,9 @@
+{
+    "trunk": {
+      "name": "My outbound trunk",
+      "address": "boardandgo.pstn.twilio.com",
+      "numbers": ["+15075411454"],
+      "auth_username": "Jasonquist.ssh@gmail.com",
+      "auth_password": "Airbus#350!"
+    }
+  }
